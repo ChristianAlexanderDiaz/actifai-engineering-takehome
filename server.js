@@ -2,27 +2,41 @@
 
 const express = require('express');
 const seeder = require('./seed');
+const salesRoutes = require('./routes/sales');
+const userRoutes = require('./routes/users');
+const groupRoutes = require('./routes/groups');
+const leaderboardRoutes = require('./routes/leaderboard');
+const { errorHandler } = require('./validators');
 
-// Constants
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const HOST = '0.0.0.0';
 
-async function start() {
-  // Seed the database
-  await seeder.seedDatabase();
-
-  // App
+function buildApp() {
   const app = express();
 
-  // Health check
-  app.get('/health', (req, res) => {
-    res.send('Hello World');
-  });
+  app.get('/health', (_req, res) => res.send('Hello World'));
 
-  // Write your endpoints here
+  app.use('/api/sales', salesRoutes);
+  app.use('/api/users', userRoutes);
+  app.use('/api/groups', groupRoutes);
+  app.use('/api/leaderboard', leaderboardRoutes);
 
-  app.listen(PORT, HOST);
-  console.log(`Server is running on http://${HOST}:${PORT}`);
+  app.use((req, res) => res.status(404).json({ error: `Not found: ${req.method} ${req.path}` }));
+  app.use(errorHandler);
+
+  return app;
 }
 
-start();
+async function start() {
+  await seeder.seedDatabase();
+  const app = buildApp();
+  app.listen(PORT, HOST, () => {
+    console.log(`Server is running on http://${HOST}:${PORT}`);
+  });
+}
+
+if (require.main === module) {
+  start();
+}
+
+module.exports = { buildApp };
