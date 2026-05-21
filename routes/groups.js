@@ -9,7 +9,7 @@ const router = express.Router();
 // GET /api/groups/:id/metrics?month=YYYY-MM
 // Returns total + average revenue + sale count for one team in one month.
 // "avg_revenue" here is the average sale size across all sales by members of this group,
-// not the per-agent average — that's a different (and also useful) question we could add later.
+// not the per-agent average. That's a different (and also useful) question we could add later.
 router.get('/:id/metrics', async (req, res, next) => {
   try {
     const groupId = parseId(req.params.id, 'id');

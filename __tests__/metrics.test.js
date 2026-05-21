@@ -22,7 +22,7 @@ describe('GET /api/users/:id/metrics', () => {
     expect(res.body).toHaveProperty('total_revenue');
     expect(res.body).toHaveProperty('avg_revenue');
     expect(res.body).toHaveProperty('sale_count');
-    // sale_count is an int; total_revenue may come back as a string (pg bigint) — coerce.
+    // sale_count is an int; total_revenue may come back as a string (pg bigint). Coerce.
     expect(Number(res.body.sale_count)).toBeGreaterThanOrEqual(0);
   });
 

@@ -41,7 +41,7 @@ describe('GET /api/sales/timeseries', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.filters.userId).toBe(1);
-    // Three months in the window (Jan, Feb, Mar) — but user 1 may not have sold in all of them.
+    // Three months in the window (Jan, Feb, Mar), but user 1 may not have sold in all of them.
     expect(res.body.data.length).toBeLessThanOrEqual(3);
     for (const row of res.body.data) {
       expect(row.window_start >= '2021-01-01').toBe(true);
